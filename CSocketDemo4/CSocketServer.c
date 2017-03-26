@@ -171,9 +171,10 @@ int main(int argc, const char * argv[]) {
 
             struct Packet receiverBuf = {0};
             int bodyLength;
+
             while (1) {
+
                 memset(&receiverBuf, 0, sizeof(receiverBuf));
-                
                 ssize_t read_result_head = readn(connect, &receiverBuf.length, sizeof(size_t));// 先接收包头sizeof(size_t)个字节
                 
                 if (read_result_head == -1) {// 读取失败
@@ -189,7 +190,6 @@ int main(int argc, const char * argv[]) {
                     // 再接收包体
                     // 先计算包体的长度
                     bodyLength = ntohl(receiverBuf.length);// 网络字节序转换为主机字节序
-
                     ssize_t read_result_body = readn(connect, receiverBuf.buff, bodyLength);
                     
                     if (read_result_body == -1) {// 读取失败
@@ -212,6 +212,7 @@ int main(int argc, const char * argv[]) {
             }
             
         } else {// 还是在父进程
+
             close(connect);// 关闭connect，重新进入accept
         }
     }
